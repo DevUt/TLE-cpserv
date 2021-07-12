@@ -18,7 +18,7 @@ libncursesw5-dev
 libpango-1.0-0 
 libpango1.0-dev 
 libpangocairo-1.0-0 
-libpython3.7-dev
+libpython3.8
 libreadline-dev 
 pkg-config 
 python-gi-dev
