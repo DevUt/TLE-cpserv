@@ -119,13 +119,19 @@ async def presence(bot):
                waiter=tasks.Waiter.fixed_delay(5*60))
     async def presence_task(_):
         while True:
-            target = random.choice([
-                member for member in bot.get_all_members()
-                if 'Purgatory' not in {role.name for role in member.roles}
+            personToOrz = random.choice([
+                'rishabhrao',
+                'DevUt',
+                'siddharth.panch',
+                'harsh_03_m',
+                'RiddhiAher',
+                'taaha.m',
+                'ferb552',
+                'shahparth'
             ])
             await bot.change_presence(activity=discord.Game(
-                name=f'{target.display_name} orz'))
-            await asyncio.sleep(10 * 60)
+                name=f'{personToOrz} orz'))
+            await asyncio.sleep(60)
 
     presence_task.start()
 
