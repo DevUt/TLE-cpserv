@@ -44,6 +44,8 @@ class CSES(commands.Cog):
                     short_placings[short[i]].append(i + 1)
             self.short_placings = short_placings
             self.fast_placings = fast_placings
+        except TypeError:
+            pass
         finally:
             self.reloading = False
 
