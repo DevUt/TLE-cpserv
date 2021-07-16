@@ -27,10 +27,13 @@ async def get_problems():
 
 
 async def get_problem_leaderboard(num):
-    tree = await _fetch(f'https://cses.fi/problemset/stats/{num}/')
-    fastest_table, shortest_table = tree.xpath(
-        '//table[@class!="summary-table" and @class!="bot-killer"]')
+    try:
+        tree = await _fetch(f'https://cses.fi/problemset/stats/{num}/')
+        fastest_table, shortest_table = tree.xpath(
+            '//table[@class!="summary-table" and @class!="bot-killer"]')
 
-    fastest = [a.text for a in fastest_table.xpath('.//a')]
-    shortest = [a.text for a in shortest_table.xpath('.//a')]
-    return fastest, shortest
+        fastest = [a.text for a in fastest_table.xpath('.//a')]
+        shortest = [a.text for a in shortest_table.xpath('.//a')]
+        return fastest, shortest
+    except ValueError:
+        pass
