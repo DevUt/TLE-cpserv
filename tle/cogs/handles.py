@@ -705,8 +705,8 @@ class Handles(commands.Cog):
         top_increases_str = []
         for member, change in member_change_pairs[:_TOP_DELTAS_COUNT]:
             delta = change.newRating - change.oldRating
-            if delta <= 0:
-                break
+            #if delta <= 0:
+            #    break
             increase_str = (f'{member.mention} [{change.handle}]({cf.PROFILE_BASE_URL}{change.handle}): {change.oldRating} '
                             f'\N{HORIZONTAL BAR} **{delta:+}** \N{LONG RIGHTWARDS ARROW} '
                             f'{change.newRating}')
@@ -726,8 +726,8 @@ class Handles(commands.Cog):
             embeds.append(embed)
 
         top_rating_increases_embed = discord.Embed(description='\n'.join(
-            top_increases_str) or 'Nobody got a positive delta :(')
-        top_rating_increases_embed.set_author(name='Top rating increases')
+            top_increases_str) or 'Nobody got a delta :(')
+        top_rating_increases_embed.set_author(name='Top rating changes')
 
         embeds.append(top_rating_increases_embed)
         discord_common.set_same_cf_color(embeds)
