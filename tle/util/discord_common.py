@@ -125,7 +125,7 @@ async def presence(bot):
             ])
             await bot.change_presence(activity=discord.Game(
                 name=f'{target.display_name} orz'))
-            await asyncio.sleep(60)
+            await asyncio.sleep(5*60)
 
     presence_task.start()
 
