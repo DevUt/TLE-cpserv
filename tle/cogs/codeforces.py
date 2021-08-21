@@ -99,22 +99,38 @@ class Codeforces(commands.Cog):
     @cf_common.user_guard(group='gitgud')
     async def gimme(self, ctx, *args):
         handle, = await cf_common.resolve_handles(ctx, self.converter, ('!' + str(ctx.author),))
-        rating = round(cf_common.user_db.fetch_cf_user(handle).effective_rating, -2)
+        srating = round(cf_common.user_db.fetch_cf_user(handle).effective_rating, -2)
+        erating = srating
         tags = []
+        notags = []
         for arg in args:
-            if arg.isdigit():
-                rating = int(arg)
+            if arg[0:3].isdigit():
+                ratings = arg.split("-")
+                srating = int(ratings[0])
+                if (len(ratings) > 1): 
+                    erating = int(ratings[1])
+                else:
+                    erating = srating
             else:
-                tags.append(arg)
+                if arg[0] == '-' or arg[0] == '~':
+                    notags.append(arg[1:])
+                else:
+                    if arg[0] == '+':
+                        tags.append(arg[1:])
+                    else:
+                        tags.append(arg)
 
         submissions = await cf.user.status(handle=handle)
         solved = {sub.problem.name for sub in submissions if sub.verdict == 'OK'}
 
         problems = [prob for prob in cf_common.cache2.problem_cache.problems
-                    if prob.rating == rating and prob.name not in solved and
+                    if prob.rating >= srating and prob.rating <= erating and prob.name not in solved and
                     not cf_common.is_contest_writer(prob.contestId, handle)]
         if tags:
             problems = [prob for prob in problems if prob.tag_matches(tags)]
+        if notags:
+            problems = [prob for prob in problems if (prob.tag_matches_or(notags) == None)]
+
 
         if not problems:
             raise CodeforcesCogError('Problems not found within the search parameters')
@@ -135,7 +151,7 @@ class Codeforces(commands.Cog):
         await ctx.send(f'Recommended problem for `{handle}`', embed=embed)
 
     @commands.command(brief='List solved problems',
-                      usage='[handles] [+hardest] [+practice] [+contest] [+virtual] [+outof] [+team] [+tag..] [r>=rating] [r<=rating] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy] [c+marker..] [i+index..]')
+                      usage='[handles] [+hardest] [+practice] [+contest] [+virtual] [+outof] [+team] [+tag..] [~tag..] [r>=rating] [r<=rating] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy] [c+marker..] [i+index..]')
     async def stalk(self, ctx, *args):
         """Print problems solved by user sorted by time (default) or rating.
         All submission types are included by default (practice, contest, etc.)
